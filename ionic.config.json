@@ -1,7 +1,7 @@
 {
-  "name": "ionic4-push",
+  "name": "ionic-fcm-push",
   "integrations": {
-    "cordova": {}
+    "capacitor": {}
   },
-  "type": "angular"
+  "type": "angular-standalone"
 }

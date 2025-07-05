@@ -1,66 +1,46 @@
-import { Component } from '@angular/core';
-
-import { Platform } from '@ionic/angular';
-import { SplashScreen } from '@ionic-native/splash-screen/ngx';
-import { StatusBar } from '@ionic-native/status-bar/ngx';
-
-import { FCM } from '@ionic-native/fcm';
-import { Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
+import {
+  PushNotifications,
+  Token,
+  PushNotificationSchema,
+  ActionPerformed
+} from '@capacitor/push-notifications';
 
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
-  styleUrls: ['app.component.scss']
+  imports: [IonApp, IonRouterOutlet],
 })
-export class AppComponent {
-  public appPages = [
-    {
-      title: 'Home',
-      url: '/home',
-      icon: 'home'
-    },
-    {
-      title: 'List',
-      url: '/list',
-      icon: 'list'
-    }
-  ];
+export class AppComponent implements OnInit {
+  token: string = '';
 
-  constructor(
-    private platform: Platform,
-    private splashScreen: SplashScreen,
-    private statusBar: StatusBar,
-    private router: Router
-  ) {
-    this.initializeApp();
+  ngOnInit() {
+    this.registerPush();
   }
 
-  initializeApp() {
-    this.platform.ready().then(() => {
-      this.statusBar.styleDefault();
-      this.splashScreen.hide();
+  registerPush() {
+    PushNotifications.requestPermissions().then(result => {
+      if (result.receive === 'granted') {
+        PushNotifications.register();
+      }
+    });
 
-      FCM.getToken().then(token => {
-        console.log(token);
-      });
+    PushNotifications.addListener('registration', (token: Token) => {
+      this.token = token.value;
+      console.log('Push registration success, token:', token.value);
+    });
 
-      FCM.onTokenRefresh().subscribe(token => {
-        console.log(token);
-      });
+    PushNotifications.addListener('registrationError', err => {
+      console.error('Push registration error:', err);
+    });
 
-      FCM.onNotification().subscribe(data => {
-        console.log(data);
-        if (data.wasTapped) {
-          console.log('Received in background');
-          this.router.navigate([data.landing_page, data.price]);
-        } else {
-          console.log('Received in foreground');
-          this.router.navigate([data.landing_page, data.price]);
-        }
-      });
+    PushNotifications.addListener('pushNotificationReceived', (notification: PushNotificationSchema) => {
+      console.log('Push received in foreground:', notification);
+    });
 
-      FCM.subscribeToTopic('people');
-      // FCM.unsubscribeFromTopic('marketing');
+    PushNotifications.addListener('pushNotificationActionPerformed', (action: ActionPerformed) => {
+      console.log('Push action performed:', action);
     });
   }
 }

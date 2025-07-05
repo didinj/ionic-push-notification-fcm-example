@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "934662913687",
+    "project_id": "ionic-fcm-41d1e",
+    "storage_bucket": "ionic-fcm-41d1e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:934662913687:android:38a3098f3adcb0ee8273d2",
+        "android_client_info": {
+          "package_name": "com.djamware.ionicfcm"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBebXCqP-0NWdJz2QoaPDtBRmpn8-DfkFo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
